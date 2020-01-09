@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Map;
 
 
-public class MyApplication {
+public class MapApplication {
 
 
 
@@ -21,7 +21,7 @@ public class MyApplication {
 
     private long lastChange;
 
-    public MyApplication() {
+    public MapApplication() {
 
         HazelcastInstance instance = Hazelcast.newHazelcastInstance();
 

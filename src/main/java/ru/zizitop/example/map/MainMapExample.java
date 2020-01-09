@@ -8,7 +8,7 @@ public class MainMapExample {
 
         BigWideWorld theWorld = new BigWideWorld();
 
-        MyApplication application = new MyApplication();
+        MapApplication application = new MapApplication();
 
         while (true) {
 

@@ -1,4 +1,4 @@
-package ru.zizitop.example.queue;
+package ru.zizitop.example.queue.message;
 
 public class ResponseMessage extends SimpleMessage {
 
@@ -14,5 +14,14 @@ public class ResponseMessage extends SimpleMessage {
 
     public void setRequestId(Long requestId) {
         this.requestId = requestId;
+    }
+
+    @Override
+    public String toString() {
+        return "ResponseMessage{" +
+                "requestId=" + requestId +
+                ", id=" + id +
+                ", payload='" + payload + '\'' +
+                '}';
     }
 }

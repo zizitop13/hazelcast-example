@@ -33,7 +33,7 @@ public class MainQueueExample {
         AgencyProducer agencyProducer = new AgencyProducer();
 
 
-        int size = 100;
+        int size = 1000;
         for(int i =0; i < size; i ++){
             bankInputQueue.add(bankProducer.createRequest());
         }
@@ -45,6 +45,10 @@ public class MainQueueExample {
                     if (agencyOutputQueue.size() > 0) {
                         RequestMessage
                                 request = agencyOutputQueue.poll();
+
+                        if(request==null){
+                            return;
+                        }
 
                         try {
                             TimeUnit.MILLISECONDS.sleep(100);
@@ -60,16 +64,34 @@ public class MainQueueExample {
         Thread thread = new Thread(runnable);
         thread.start();
 
-        queueApplication.start();
+
 
 
 
         Long start = System.currentTimeMillis();
+
+        Runnable queueAppRunnable = () -> {
+            QueueApplication queueApplication1 = new QueueApplication(storage);
+            queueApplication1.setBankInputQueue(bankInputQueue);
+            queueApplication1.setBankOutputQueue(bankOutputQueue);
+            queueApplication1.setAgencyInputQueue(agencyInputQueue);
+            queueApplication1.setAgencyOutputQueue(agencyOutputQueue);
+            queueApplication1.start();
+        };
+
+        queueApplication.start();
+        new Thread(queueAppRunnable).start();
+
+
         while(bankOutputQueue.size() != size){
             queueApplication.printState();
             TimeUnit.SECONDS.sleep(1);
         }
 
+
+        for(SimpleMessage simpleMessage : storage.values()){
+            System.out.println(simpleMessage.toString());
+        }
         System.out.println("Time:" +  (System.currentTimeMillis() - start)/1000);
 
 

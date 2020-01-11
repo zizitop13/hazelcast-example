@@ -56,7 +56,7 @@ public class QueueApplication {
         this.agencyOutputQueue = agencyOutputQueue;
     }
 
-    public QueueApplication(Hashtable<Long, SimpleMessage> messageStorage) throws InterruptedException {
+    public QueueApplication(Hashtable<Long, SimpleMessage> messageStorage)  {
         HazelcastInstance instance = Hazelcast.newHazelcastInstance();
         innerBankQueue = instance.getQueue("innerBankQueue");
         innerAgencyQueue = instance.getQueue("innerAgencyQueue");
@@ -93,6 +93,9 @@ public class QueueApplication {
                 synchronized (bankInputQueue) {
                     if (bankInputQueue.size() > 0) {
                         RequestMessage request = bankInputQueue.poll();
+                        if(request==null){
+                            return;
+                        }
                         try {
                             TimeUnit.MILLISECONDS.sleep(100);
                         } catch (InterruptedException e) {
@@ -117,11 +120,16 @@ public class QueueApplication {
                     if (innerBankQueue.size() > 0) {
                         RequestMessage request = (RequestMessage) innerBankQueue.poll();
 
+                        if(request==null){
+                            return;
+                        }
+
                         try {
                             TimeUnit.MILLISECONDS.sleep(100);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+
                         messageStorage.put(request.getId(), request);
 
                         RequestMessage systemRequest = new RequestMessage(request.getId());
@@ -147,6 +155,9 @@ public class QueueApplication {
                 synchronized (agencyInputQueue) {
                     if (agencyInputQueue.size() > 0) {
                         ResponseMessage responseMessage = agencyInputQueue.poll();
+                        if(responseMessage==null){
+                            return;
+                        }
                         try {
                             TimeUnit.MILLISECONDS.sleep(100);
                         } catch (InterruptedException e) {
@@ -172,6 +183,9 @@ public class QueueApplication {
                 synchronized (innerAgencyQueue) {
                     if (innerAgencyQueue.size() > 0) {
                         ResponseMessage response = innerAgencyQueue.poll();
+                        if(response==null){
+                            return;
+                        }
                         try {
                             TimeUnit.MILLISECONDS.sleep(100);
                         } catch (InterruptedException e) {

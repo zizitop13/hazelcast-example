@@ -61,6 +61,8 @@ public class QueueApplication {
         innerBankQueue = instance.getQueue("innerBankQueue");
         innerAgencyQueue = instance.getQueue("innerAgencyQueue");
         this.messageStorage = messageStorage;
+
+        instance.
     }
 
     public void start()  {
